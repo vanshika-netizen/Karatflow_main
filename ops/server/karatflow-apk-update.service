@@ -1,0 +1,14 @@
+[Unit]
+Description=Download the latest KaratFlow Android release
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=apkdeploy
+Group=apkdeploy
+ExecStart=/usr/local/bin/karatflow-apk-update
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/var/www/app-downloads
