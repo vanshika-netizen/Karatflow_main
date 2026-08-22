@@ -6,4 +6,4 @@ COPY . .
 RUN useradd --system --uid 10001 dashboard
 USER dashboard
 EXPOSE 8080
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "app:app"]
