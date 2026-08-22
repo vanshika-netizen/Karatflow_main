@@ -5,15 +5,14 @@
 <main>
   <header>
     <div><p class="eyebrow">KaratFlow</p><h1>Android build dashboard</h1><p>{{ repository }}</p></div>
-    <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="quiet">Sign out</button></form>
   </header>
 
   {% for message in get_flashed_messages() %}<p class="notice">{{ message }}</p>{% endfor %}
 
   <section class="card primary">
     <h2>Build latest code</h2>
-    <p>Builds the current <code>main</code> branch on the dedicated Linux runner.</p>
-    <form method="post" action="/build"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button type="submit">Start Android build</button></form>
+    <p>Builds the current <code>main</code> branch on the dedicated Linux runner. Requests are limited to one every five minutes.</p>
+    <form method="post" action="/build"><button type="submit">Start Android build</button></form>
   </section>
 
   <section class="card">
