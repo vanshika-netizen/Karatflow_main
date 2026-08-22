@@ -1,0 +1,37 @@
+<!doctype html>
+<title>KaratFlow Build Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/site.css">
+<main>
+  <header>
+    <div><p class="eyebrow">KaratFlow</p><h1>Android build dashboard</h1><p>{{ repository }}</p></div>
+    <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="quiet">Sign out</button></form>
+  </header>
+
+  {% for message in get_flashed_messages() %}<p class="notice">{{ message }}</p>{% endfor %}
+
+  <section class="card primary">
+    <h2>Build latest code</h2>
+    <p>Builds the current <code>main</code> branch on the dedicated Linux runner.</p>
+    <form method="post" action="/build"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button type="submit">Start Android build</button></form>
+  </section>
+
+  <section class="card">
+    <h2>Latest APK</h2>
+    {% if latest_release %}
+      <p>{{ latest_release.name or latest_release.tag_name }}</p>
+      <a class="button" href="/downloads/latest.apk">Download APK</a>
+      <a class="link" href="{{ latest_release.html_url }}">View GitHub release</a>
+    {% else %}
+      <p>No successful server build has published an APK yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Recent builds</h2>
+    <table><thead><tr><th>Build</th><th>Status</th><th>Branch</th><th></th></tr></thead>
+    <tbody>{% for run in runs %}
+      <tr><td>#{{ run.run_number }}</td><td>{{ run.status }}{% if run.conclusion %}: {{ run.conclusion }}{% endif %}</td><td>{{ run.head_branch }}</td><td><a href="{{ run.html_url }}">Details</a></td></tr>
+    {% else %}<tr><td colspan="4">No server build has started yet.</td></tr>{% endfor %}</tbody></table>
+  </section>
+</main>
