@@ -1,0 +1,9 @@
+services:
+  dashboard:
+    build:
+      context: ../../dashboard
+    restart: unless-stopped
+    env_file:
+      - /etc/karatflow-dashboard/dashboard.env
+    ports:
+      - "127.0.0.1:8080:8080"
