@@ -4,7 +4,7 @@ services:
       context: ../../dashboard
     restart: unless-stopped
     env_file:
-      - ./dashboard.env
+      - ./.env
     environment:
       APK_DIRECTORY: /app/downloads
     volumes:
