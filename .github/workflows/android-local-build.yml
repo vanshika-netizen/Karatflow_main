@@ -1,0 +1,62 @@
+name: Build Android APK locally
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: karatflow-local-build
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    name: Build and publish APK
+    runs-on: [self-hosted, windows, flutter-build]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Display build tools
+        shell: pwsh
+        run: |
+          java -version
+          flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Verify and publish latest APK
+        shell: pwsh
+        run: |
+          $apk = Join-Path $env:GITHUB_WORKSPACE "build\app\outputs\flutter-apk\app-release.apk"
+          if (-not (Test-Path -LiteralPath $apk -PathType Leaf)) {
+            throw "The Android APK was not created."
+          }
+
+          $downloadDirectory = "C:\Karatflow\app-downloads"
+          New-Item -ItemType Directory -Force -Path $downloadDirectory | Out-Null
+          $temporaryApk = Join-Path $downloadDirectory ".latest.apk.$PID.tmp"
+          $latestApk = Join-Path $downloadDirectory "latest.apk"
+          Copy-Item -LiteralPath $apk -Destination $temporaryApk -Force
+          Move-Item -LiteralPath $temporaryApk -Destination $latestApk -Force
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk-${{ github.run_number }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
