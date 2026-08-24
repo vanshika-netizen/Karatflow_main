@@ -54,10 +54,10 @@ pushes and manual dispatches.
 Copy the example environment file:
 
 ```powershell
-Copy-Item dashboard.env.example dashboard.env
+Copy-Item .env.example .env
 ```
 
-Edit `dashboard.env` and set:
+Edit `.env` and set:
 
 - `GITHUB_BUILD_TOKEN`: a fine-grained token limited to this repository,
   with Actions **Read and write** and Contents **Read**.
@@ -65,7 +65,7 @@ Edit `dashboard.env` and set:
 - `APK_DOWNLOAD_DIR`: keep `C:\Karatflow\app-downloads` unless you chose
   another directory.
 
-Do not commit `dashboard.env`.
+Do not commit `.env`.
 
 ## Start the dashboard
 
