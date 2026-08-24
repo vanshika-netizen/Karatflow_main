@@ -1,0 +1,13 @@
+services:
+  dashboard:
+    build:
+      context: ../../dashboard
+    restart: unless-stopped
+    env_file:
+      - ./dashboard.env
+    environment:
+      APK_DIRECTORY: /app/downloads
+    volumes:
+      - "${APK_DOWNLOAD_DIR}:/app/downloads:ro"
+    ports:
+      - "${DASHBOARD_BIND_ADDRESS:-127.0.0.1}:8080:8080"
